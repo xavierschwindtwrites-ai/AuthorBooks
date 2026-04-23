@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuthorBooks — Financial Tracking for Self-Employed Authors</title>
+  <meta name="description" content="AuthorBooks is a free, local-first Mac app built for self-employed authors. Track income, expenses, projects, subscriptions, and goals — all stored privately on your own computer." />
+  <meta property="og:title" content="AuthorBooks" />
+  <meta property="og:description" content="Financial tracking built for self-employed authors. Free, local-first, no subscriptions." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo-950: #1e1b4b;
+      --indigo-900: #312e81;
+      --indigo-700: #4338ca;
+      --indigo-600: #4f46e5;
+      --indigo-100: #e0e7ff;
+      --indigo-50:  #eef2ff;
+      --slate-900: #0f172a;
+      --slate-700: #334155;
+      --slate-500: #64748b;
+      --slate-300: #cbd5e1;
+      --slate-100: #f1f5f9;
+      --slate-50:  #f8fafc;
+      --white: #ffffff;
+      --emerald-600: #059669;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--slate-900);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--slate-100);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--indigo-950);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+    .nav-logo-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--slate-900);
+    }
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--slate-900); }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--indigo-950);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--indigo-900); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: white;
+      color: var(--slate-700);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid var(--slate-300);
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--slate-50); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, var(--indigo-950) 0%, #2d2a6e 55%, #1e3a5f 100%);
+      color: white;
+      padding: 100px 2rem 110px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 0%, rgba(99,102,241,0.25) 0%, transparent 65%),
+                  radial-gradient(ellipse at 10% 100%, rgba(16,185,129,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 99px;
+      padding: 0.3rem 0.85rem;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 1.75rem;
+    }
+    .hero-badge-dot {
+      width: 7px; height: 7px;
+      background: #34d399;
+      border-radius: 50%;
+    }
+    .hero h1 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      max-width: 680px;
+      margin: 0 auto 1.25rem;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 span { color: #a5b4fc; }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.72);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .hero-ctas .btn-primary {
+      background: white;
+      color: var(--indigo-950);
+      font-size: 15px;
+      padding: 0.7rem 1.5rem;
+    }
+    .hero-ctas .btn-primary:hover { background: var(--indigo-50); }
+    .hero-ctas .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .hero-ctas .btn-ghost:hover { color: white; }
+    .hero-note {
+      margin-top: 1.5rem;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── LOGO MARK (large) ── */
+    .logo-mark-lg {
+      width: 88px; height: 88px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 2rem;
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 36px;
+      color: white;
+      letter-spacing: -1px;
+    }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .proof-bar {
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-100);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 13px;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+    .proof-item svg { color: var(--emerald-600); flex-shrink: 0; }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 2rem; }
+    .container { max-width: 1040px; margin: 0 auto; }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--indigo-700);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--slate-900);
+      margin-bottom: 1rem;
+      letter-spacing: -0.3px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--slate-500);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    /* ── FEATURES GRID ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--slate-100);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--indigo-50);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 22px;
+    }
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--slate-900);
+      margin-bottom: 0.4rem;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.6;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; position: relative; }
+    .steps::before {
+      content: '';
+      position: absolute;
+      left: 23px; top: 44px; bottom: 44px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--indigo-100), var(--slate-100));
+    }
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      padding: 1.5rem 0;
+    }
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--indigo-950);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .step-content { padding-top: 0.6rem; }
+    .step-content h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--slate-900);
+      margin-bottom: 0.35rem;
+    }
+    .step-content p {
+      font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+
+    /* ── PRIVACY PANEL ── */
+    .privacy-panel {
+      background: linear-gradient(135deg, var(--indigo-950) 0%, #1e3a5f 100%);
+      border-radius: 24px;
+      padding: 3rem;
+      color: white;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .privacy-panel-text { flex: 1; min-width: 260px; }
+    .privacy-panel-text h2 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+    }
+    .privacy-panel-text p {
+      color: rgba(255,255,255,0.7);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .privacy-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .privacy-bullet {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+    .check-circle {
+      width: 22px; height: 22px;
+      background: rgba(52,211,153,0.2);
+      border: 1px solid rgba(52,211,153,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: #34d399;
+    }
+
+    /* ── AI SECTION ── */
+    .ai-section { background: var(--slate-50); }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 3rem;
+    }
+    @media (max-width: 680px) { .ai-grid { grid-template-columns: 1fr; } }
+    .ai-features { display: flex; flex-direction: column; gap: 1.25rem; }
+    .ai-feature {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .ai-feature-icon {
+      width: 40px; height: 40px;
+      background: var(--indigo-50);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .ai-feature h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate-900);
+      margin-bottom: 0.2rem;
+    }
+    .ai-feature p { font-size: 13px; color: var(--slate-500); line-height: 1.6; }
+    .ai-note-box {
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+    .ai-note-box h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--slate-900);
+      margin-bottom: 0.75rem;
+    }
+    .ai-note-box p {
+      font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+    .ai-note-box p:last-child { margin-bottom: 0; color: #059669; font-weight: 500; }
+
+    /* ── DOWNLOAD ── */
+    .download-section { background: var(--slate-900); color: white; text-align: center; }
+    .download-section .section-title { color: white; }
+    .download-section .section-sub { color: rgba(255,255,255,0.55); margin: 0 auto; }
+    .download-cards {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+    .download-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      text-align: center;
+      min-width: 200px;
+      transition: background 0.2s;
+    }
+    .download-card:hover { background: rgba(255,255,255,0.1); }
+    .download-card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .download-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 0.25rem; }
+    .download-card p { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 1.25rem; }
+    .btn-download {
+      display: inline-block;
+      background: white;
+      color: var(--slate-900);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 0.55rem 1.25rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-download:hover { background: var(--indigo-50); }
+    .install-note {
+      margin-top: 2rem;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+    .install-note a { color: rgba(255,255,255,0.55); text-decoration: underline; }
+    .install-note a:hover { color: white; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--slate-900);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+    .footer-logo-mark {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 11px;
+      color: white;
+    }
+    .footer-logo-name { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.25); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav .nav-links { display: none; }
+      .privacy-panel { padding: 2rem; }
+      .steps::before { display: none; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">AB</div>
+      <span class="nav-logo-name">AuthorBooks</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#ai">AI features</a>
+      <a href="#download">Download</a>
+      <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <a href="#download" class="btn-primary">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" /><path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" /></svg>
+      Download for Mac
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-mark-lg">AB</div>
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Free &amp; open source · v0.1.0
+    </div>
+    <h1>Financial tracking built for <span>self-employed authors</span></h1>
+    <p>Every feature you need to manage your writing income, track business expenses, and stay on top of your finances — stored privately on your own Mac.</p>
+    <div class="hero-ctas">
+      <a href="#download" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" /><path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" /></svg>
+        Download for Mac — Free
+      </a>
+      <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks" target="_blank" rel="noopener" class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"/></svg>
+        View source on GitHub
+      </a>
+    </div>
+    <p class="hero-note">macOS 12 or later · No account required · No data leaves your Mac</p>
+  </section>
+
+  <!-- PROOF BAR -->
+  <div class="proof-bar">
+    <div class="proof-item">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+      No monthly subscription
+    </div>
+    <div class="proof-item">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+      All data stored locally
+    </div>
+    <div class="proof-item">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+      Open source
+    </div>
+    <div class="proof-item">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+      Built for Mac
+    </div>
+    <div class="proof-item">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+      Optional AI features
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything a self-employed author needs</h2>
+      <p class="section-sub">AuthorBooks brings together the financial tools that matter most to writers who work for themselves — in one clean, distraction-free app.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Transactions</h3>
+          <p>Log every expense and income entry with categories, business/personal tagging, receipt attachments, and notes. Filter, sort, and search across your full history.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Projects</h3>
+          <p>Organize spending by book, series, or project. Subprojects let you break a series into individual titles and see aggregated costs at every level.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💼</div>
+          <h3>Jobs</h3>
+          <p>Track freelance contracts and hourly work. Log individual work sessions, calculate total earnings per job, and see a running summary of all client work.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Subscriptions</h3>
+          <p>Never be surprised by a renewal. Track every recurring cost — software, memberships, services — and see your total committed monthly spend at a glance.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Savings Goals</h3>
+          <p>Set financial targets and track progress over time. See whether you're on track based on your deadline and watch your goals move toward completion.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Reports</h3>
+          <p>Monthly summaries, category breakdowns, project spending reports, and tax-ready overviews. Export to CSV whenever you need to hand data to an accountant.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works" style="background: var(--slate-50);">
+    <div class="container">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Up and running in minutes</h2>
+      <p class="section-sub">AuthorBooks is designed to get out of your way. No account setup, no cloud sync to configure, no recurring payments.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Download and open</h3>
+            <p>Download the DMG for your Mac (Intel or Apple Silicon), drag AuthorBooks to your Applications folder, and right-click → Open to bypass Gatekeeper on the first launch. That's the only extra step — every launch after that is normal.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Complete the quick setup</h3>
+            <p>A short onboarding wizard collects your name and optionally an OpenRouter API key for AI features. The whole app works without the key — it just unlocks auto-categorization and receipt scanning.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Start adding your data</h3>
+            <p>Add your first transaction, create a project for the book you're working on, and link your spending. The dashboard fills in with summaries, charts, and trends as you go.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Your data stays on your Mac</h3>
+            <p>Everything is stored in a local SQLite database in your Mac's Application Support folder. Nothing is uploaded, synced, or shared. You own your data completely.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section style="padding: 60px 2rem;">
+    <div class="container">
+      <div class="privacy-panel">
+        <div class="privacy-panel-text">
+          <h2>Your financial data is nobody else's business</h2>
+          <p>Most financial apps send your data to their servers. AuthorBooks works the opposite way — everything lives in a single database file on your Mac. No cloud, no tracking, no vendor lock-in.</p>
+        </div>
+        <div class="privacy-bullets">
+          <div class="privacy-bullet">
+            <div class="check-circle">
+              <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+            </div>
+            No account or sign-in required
+          </div>
+          <div class="privacy-bullet">
+            <div class="check-circle">
+              <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+            </div>
+            Data never leaves your Mac
+          </div>
+          <div class="privacy-bullet">
+            <div class="check-circle">
+              <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+            </div>
+            No usage tracking or analytics
+          </div>
+          <div class="privacy-bullet">
+            <div class="check-circle">
+              <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+            </div>
+            Fully open source — read every line
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI FEATURES -->
+  <section id="ai" class="ai-section">
+    <div class="container">
+      <div class="section-label">AI Features</div>
+      <h2 class="section-title">Optional AI — pay only for what you use</h2>
+      <p class="section-sub">If you want to save time, AuthorBooks can use AI to categorize expenses and read receipts automatically. It's entirely optional and costs pennies.</p>
+      <div class="ai-grid">
+        <div class="ai-features">
+          <div class="ai-feature">
+            <div class="ai-feature-icon">🏷️</div>
+            <div>
+              <h4>Auto-categorization</h4>
+              <p>Paste a vendor name and AuthorBooks will suggest the right expense category — cover designer, editing software, conference fee — based on the context of your business.</p>
+            </div>
+          </div>
+          <div class="ai-feature">
+            <div class="ai-feature-icon">📷</div>
+            <div>
+              <h4>Receipt scanning</h4>
+              <p>Attach a photo or PDF of a receipt and the app reads the vendor, amount, and date automatically, pre-filling your transaction form so you don't have to type anything.</p>
+            </div>
+          </div>
+          <div class="ai-feature">
+            <div class="ai-feature-icon">💸</div>
+            <div>
+              <h4>Costs pennies per month</h4>
+              <p>AI features are powered by OpenRouter using Claude Haiku — one of the most efficient models available. Typical usage costs less than $0.10 per month for an active author.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ai-note-box">
+          <h3>How to enable AI features</h3>
+          <p>Create a free account at <strong>openrouter.ai</strong>, then go to Keys → Create Key. Paste the key into AuthorBooks during setup or any time in Settings.</p>
+          <p>No key? No problem. Every feature in AuthorBooks — transactions, projects, reports, goals — works perfectly without it. You can always add a key later.</p>
+          <p>✓ Works without AI · Add a key any time</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="download" class="download-section">
+    <div class="container">
+      <div class="section-label" style="color: #a5b4fc;">Download</div>
+      <h2 class="section-title">Download AuthorBooks free</h2>
+      <p class="section-sub">Available for macOS 12 Monterey and later. Choose the right version for your Mac.</p>
+      <div class="download-cards">
+        <div class="download-card">
+          <div class="download-card-icon">􀨤</div>
+          <h3>Apple Silicon</h3>
+          <p>MacBook Air/Pro M1–M4, Mac mini M1+, Mac Studio, Mac Pro M2+</p>
+          <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks/releases/latest" class="btn-download">Download .dmg</a>
+        </div>
+        <div class="download-card">
+          <div class="download-card-icon">🖥️</div>
+          <h3>Intel Mac</h3>
+          <p>MacBook Pro/Air Intel, iMac Intel, Mac mini Intel, Mac Pro Intel</p>
+          <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks/releases/latest" class="btn-download">Download .dmg</a>
+        </div>
+        <div class="download-card">
+          <div class="download-card-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"/></svg>
+          </div>
+          <h3>Build from source</h3>
+          <p>Clone the repo, run npm install &amp;&amp; npm run dist:mac</p>
+          <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks" target="_blank" rel="noopener" class="btn-download">View on GitHub</a>
+        </div>
+      </div>
+      <p class="install-note">
+        First launch on macOS may show a security warning — right-click the app and choose Open, or run <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;">xattr -cr /Applications/AuthorBooks.app</code>.<br/>
+        See <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks/blob/main/README-INSTALL.md">README-INSTALL.md</a> for full instructions.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" class="footer-logo">
+      <div class="footer-logo-mark">AB</div>
+      <span class="footer-logo-name">AuthorBooks</span>
+    </a>
+    <div class="footer-links">
+      <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks/blob/main/README-INSTALL.md" target="_blank" rel="noopener">Install guide</a>
+      <a href="https://github.com/xavierschwindtwrites-ai/AuthorBooks/issues" target="_blank" rel="noopener">Report a bug</a>
+    </div>
+    <span class="footer-copy">Free &amp; open source · v0.1.0</span>
+  </footer>
+
+</body>
+</html>
