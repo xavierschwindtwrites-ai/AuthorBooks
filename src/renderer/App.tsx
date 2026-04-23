@@ -72,13 +72,7 @@ export default function App() {
   if (!ready) return null
 
   if (needsOnboarding) {
-    return (
-      <div className="flex h-screen bg-slate-50 text-slate-900">
-        <Routes>
-          <Route path="*" element={<OnboardingPage onComplete={() => setNeedsOnboarding(false)} />} />
-        </Routes>
-      </div>
-    )
+    return <OnboardingPage onComplete={() => setNeedsOnboarding(false)} />
   }
 
   return (

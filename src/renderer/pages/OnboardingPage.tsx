@@ -58,7 +58,7 @@ export default function OnboardingPage({ onComplete }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center overflow-y-auto bg-slate-50 px-4 py-8">
+    <div className="min-h-screen w-full overflow-y-auto bg-slate-50 px-4 py-12 flex flex-col items-center justify-center">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
