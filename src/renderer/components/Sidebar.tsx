@@ -13,6 +13,7 @@ const links = [
   { to: '/subscriptions', label: 'Subscriptions' },
   { to: '/goals', label: 'Goals' },
   { to: '/reports', label: 'Reports' },
+  { to: '/chat', label: 'AI Advisor' },
 ]
 
 function GearIcon() {

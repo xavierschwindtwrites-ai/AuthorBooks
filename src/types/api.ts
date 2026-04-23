@@ -172,6 +172,9 @@ export interface Api {
     save: (data: { base64: string; filename: string }) => Promise<{ path: string }>
     open: (filePath: string) => Promise<void>
   }
+  chat: {
+    getContext: () => Promise<string>
+  }
   settings: {
     get: () => Promise<{
       openRouterApiKey?: string

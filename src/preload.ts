@@ -80,6 +80,9 @@ const api: Api = {
     save: (data) => invoke('receipts:save', data),
     open: (filePath) => invoke('receipts:open', filePath),
   },
+  chat: {
+    getContext: () => invoke('chat:getContext'),
+  },
   settings: {
     get: () => invoke('settings:get'),
     save: (data) => invoke('settings:save', data),

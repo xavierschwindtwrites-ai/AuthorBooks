@@ -9,6 +9,7 @@ import EditTransactionPage from './pages/EditTransactionPage'
 import GoalsPage from './pages/GoalsPage'
 import JobsPage from './pages/JobsPage'
 import NewTransactionPage from './pages/NewTransactionPage'
+import ChatPage from './pages/ChatPage'
 import OnboardingPage from './pages/OnboardingPage'
 import ProjectDetailPage from './pages/ProjectDetailPage'
 import ProjectsPage from './pages/ProjectsPage'
@@ -48,6 +49,7 @@ function MainApp() {
         <Route path="/subscriptions" element={<SubscriptionsPage />} />
         <Route path="/goals" element={<GoalsPage />} />
         <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/chat" element={<ChatPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Placeholder name="Not Found" />} />
       </Routes>
