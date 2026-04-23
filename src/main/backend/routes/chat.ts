@@ -15,7 +15,7 @@ chatRouter.post('/', async (req: Request, res: Response) => {
   const messages = Array.isArray(body.messages) ? (body.messages as ChatMessage[]) : []
   const systemPrompt = typeof body.systemPrompt === 'string' ? body.systemPrompt : ''
 
-  const apiKey = getApiKey()
+  const apiKey = getApiKey().trim()
   if (!apiKey) {
     res.status(400).json({ error: 'No API key configured. Add your OpenRouter key in Settings.' })
     return

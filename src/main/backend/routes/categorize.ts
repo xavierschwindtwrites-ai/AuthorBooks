@@ -159,7 +159,7 @@ categorizeRouter.post('/', async (req: Request, res: Response) => {
     return
   }
 
-  const apiKey = getApiKey()
+  const apiKey = getApiKey().trim()
   if (!apiKey) {
     res.json(fallback(categories))
     return
