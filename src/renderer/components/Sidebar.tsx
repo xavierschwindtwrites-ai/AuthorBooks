@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { api } from '../lib/api'
 
-const APP_VERSION = '0.1.0'
+const APP_VERSION = '0.2.0'
 
 const links = [
   { to: '/dashboard', label: 'Dashboard' },
