@@ -3,6 +3,7 @@ import type { Server } from 'node:http'
 import { categorizeRouter, clearCache } from './routes/categorize'
 import { ocrRouter } from './routes/ocr'
 import { chatRouter } from './routes/chat'
+import { bankStatementRouter } from './routes/bank-statement'
 
 const MODEL = 'anthropic/claude-haiku-4-5'
 const PORT = 3001
@@ -49,6 +50,7 @@ export function startBackend(apiKey: string): Promise<void> {
   app.use('/api/categorize', categorizeRouter)
   app.use('/api/ocr', express.json({ limit: '10mb' }), ocrRouter)
   app.use('/api/chat', express.json({ limit: '128kb' }), chatRouter)
+  app.use('/api/bank-statement', express.json({ limit: '10mb' }), bankStatementRouter)
 
   return new Promise((resolve, reject) => {
     const s = app.listen(PORT, '127.0.0.1', () => {

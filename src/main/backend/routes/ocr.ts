@@ -85,7 +85,7 @@ ocrRouter.post('/', async (req: Request, res: Response) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 256,
+        max_tokens: 512,
         messages: [
           {
             role: 'user',
