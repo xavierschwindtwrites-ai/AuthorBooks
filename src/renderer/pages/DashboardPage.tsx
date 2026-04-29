@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
 import type {
@@ -13,6 +13,7 @@ import SpendingPieChart, { type PieSlice } from '../components/SpendingPieChart'
 import RecentTransactions from '../components/RecentTransactions'
 import UpcomingRenewals from '../components/UpcomingRenewals'
 import GoalsProgress, { type GoalWithProgress } from '../components/GoalsProgress'
+import BankStatementImporter from '../components/BankStatementImporter'
 
 type DashboardData = {
   thisMonth: {
@@ -134,6 +135,11 @@ async function loadDashboard(): Promise<DashboardData> {
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const handleImported = useCallback(() => {
+    setRefreshKey((k) => k + 1)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -149,7 +155,7 @@ export default function DashboardPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [refreshKey])
 
   if (error) {
     return (
@@ -206,6 +212,10 @@ export default function DashboardPage() {
           + New Transaction
         </Link>
       </header>
+
+      <div className="mb-5">
+        <BankStatementImporter onImported={handleImported} />
+      </div>
 
       {isEmpty && (
         <section className="mb-6 rounded-xl border border-indigo-100 bg-indigo-50 p-6">

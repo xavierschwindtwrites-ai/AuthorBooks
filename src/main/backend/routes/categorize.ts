@@ -113,7 +113,7 @@ async function callOpenRouter(
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 256,
+      max_tokens: 512,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
