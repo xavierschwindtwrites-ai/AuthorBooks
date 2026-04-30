@@ -41,13 +41,11 @@ export function startBackend(apiKey: string): Promise<void> {
     next()
   })
 
-  app.use(express.json({ limit: '64kb' }))
-
   app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', model: MODEL })
   })
 
-  app.use('/api/categorize', categorizeRouter)
+  app.use('/api/categorize', express.json({ limit: '64kb' }), categorizeRouter)
   app.use('/api/ocr', express.json({ limit: '10mb' }), ocrRouter)
   app.use('/api/chat', express.json({ limit: '128kb' }), chatRouter)
   app.use('/api/bank-statement', express.json({ limit: '10mb' }), bankStatementRouter)
