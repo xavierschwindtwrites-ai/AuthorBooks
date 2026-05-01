@@ -1,7 +1,7 @@
 {
   "name": "authorbooks",
   "productName": "AuthorBooks",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Financial tracking app for self-employed authors",
   "main": "dist-electron/index.js",
   "scripts": {
